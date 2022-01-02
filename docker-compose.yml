@@ -1,0 +1,51 @@
+version: "3.9"
+x-app: &default-app
+  build: '.'
+  volumes:
+    - .:/usr/src/app
+  depends_on:
+    - db
+  restart: "unless-stopped"
+
+services:
+  web:
+    << : *default-app
+    command: python3 manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    
+  tailwind:
+    <<: *default-app
+    command: "python3 manage.py tailwind start"
+    tty: true
+    ports:
+      - "8383:8383"
+
+  db:
+    image: postgres
+
+    volumes:
+      - ./data/db:/var/lib/postgresql/data:z
+
+    environment:
+      - POSTGRES_DB=frizzl
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=postgres
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@google.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_LISTEN_PORT=5050
+
+    volumes:
+      - ./data/pgadmin:/var/lib/pgadmin/
+
+    depends_on:
+      - db
+
+    ports:
+      - "5050:5050"
