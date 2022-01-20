@@ -3,3 +3,4 @@ data
 node_modules
 static
 __pycache__
+*.db

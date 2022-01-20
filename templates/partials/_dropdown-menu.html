@@ -1,0 +1,22 @@
+<button type="button" class="flex text-sm rounded-full focus:ring-4 focus:ring-gray-300 0" id="dropdownButton"
+    data-dropdown-toggle="dropdown" aria-expanded="false">
+    <span class="sr-only">Open user menu</span>
+    <img class="w-12 h-12 rounded-full object-cover" src="{{ user.userprofile.photo.url }}" alt="user photo">
+</button>
+
+<div id="dropdown"
+    class="hidden z-10 w-44 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700">
+    <ul class="py-1" aria-labelledby="dropdownButton">
+        <li>
+            <a href="{% url 'pages:profile' user.username %}"
+                class="block py-2 px-4 text-base text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'accounts:logout' %}"
+                class="block py-2 px-4 text-base text-red-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                Logout
+            </a>
+        </li>
+    </ul>
+</div>

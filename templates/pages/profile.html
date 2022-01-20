@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ user_profile.user.username }}{% endblock title %}
+
+{% block content %}
+{% include 'partials/_update-profile.html' with user_form=user_form profile_form=profile_form  %}
+<div class='flex flex-col relative -top-10'>
+    <div class='flex space-x-16 w-full max-w-4xl mx-auto'>
+        <div>
+            <img class='h-44 w-44 rounded-full object-cover' src="{{ user_profile.photo.url }}"
+                alt="{{ user_profile.user.username }}">
+        </div>
+        <div class='flex-1'>
+            <div class="flex flex-col mt-1 space-y-6 mb-4">
+                <div class='flex space-x-8'>
+                    <h1 class="font-semibold text-3xl mt-1">{{ user_profile.user.username }}</h1>
+        
+                    {% if user == user_profile.user %}
+                    <button
+                        class='self-start py-2 px-4 mr-2 mb-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700'
+                        id="update-profile-modal" data-modal-toggle="update-profile-modal" aria-expanded="false">
+                        Edit Profile
+                    </button>
+                    {% else %}
+                    <form method="POST" action="{% url 'pages:follow-user' %}">
+                        {% csrf_token %}
+                        {% if is_followed  %}
+                        <button
+                            class='py-2 px-4 mr-2 mb-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700'
+                            name="username" value="{{ user_profile.user.username }}">
+                            <p class='flex items-center space-x-4'>
+                                <span>Following</span>
+                                <span>
+                                    <ion-icon name="checkmark-outline"></ion-icon>
+                                </span>
+                            </p>
+                        </button>
+                        {% else %}
+                        <button
+                            class="self-start text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                            name="username" value="{{ user_profile.user.username }}">
+                            Follow
+                        </button>
+                        {% endif %}
+                    </form>
+                    {% endif %}
+                </div>
+                <div class='flex space-x-8'>
+                    <p class='text-zinc-700 text-lg'>
+                        <span class='font-semibold'>{{ posts.count }}</span> 
+                        <span>
+                            {% if posts.count == 1 %}
+                            post
+                            {% else %}
+                            posts
+                            {% endif %}
+                        </span>  
+                    </p>
+                    <p class='text-zinc-700 text-lg'>
+                        <span class='font-semibold'>{{ user_profile.followers_count }}</span> 
+                        <span>
+                            {% if user_profile.followers_count == 1 %}
+                            follower
+                            {% else %}
+                            followers
+                            {% endif %}
+                        </span>  
+                    </p>
+                    <p class='text-zinc-700 text-lg'>
+                        <span class='font-semibold'>{{ user_profile.following_count }}</span> 
+                        <span>
+                            following
+                        </span>  
+                    </p>
+                </div>
+            </div>
+            <div class='w-2/3'>
+                <p class='flex flex-col space-y-[3px] text-zinc-700 text-base'>
+                    <span class='text-zinc-900 text-lg font-bold'>{{ user_profile.user.username}}</span>
+                    <span>
+                        {{ user_profile.bio }}
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <hr class='my-8' />
+    <div class='grid grid-cols-3 gap-x-5 gap-y-10 auto-rows-[minmax(0,_350px)]'>
+        {% for post in posts %}
+            <a href="{% url 'posts:detail' post.id %}"> 
+                <div class="h-full w-full">
+                    <img class='h-full w-full object-cover hover:brightness-75 transition' src="{{ post.img.url }}" alt="">
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}

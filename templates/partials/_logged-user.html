@@ -1,0 +1,12 @@
+<div class='flex bg-white border border-gray-200 px-4 py-3 items-center justify-center space-x-8'>
+    <img class="rounded-full h-16 w-16 object-cover" src="{{ user.userprofile.photo.url }}" alt="{{ user.username }}">
+    <div class='flex-1 flex flex-col'>
+        <a href="{% url 'pages:profile' user.username %}">
+            <h1 class="text-xl font-bold">{{ user.username }}</h1>
+        </a>
+        <p class="text-sm">{{ user.email }}</p>
+    </div>
+    <a href="{% url 'accounts:logout' %}">
+        <button class="text-red-500">Log out</button>
+    </a>
+</div>

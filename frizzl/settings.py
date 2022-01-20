@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from django.contrib.messages import constants as messages
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,7 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tailwind',
     'theme',
-    'pages'
+    'pages',
+    'posts',
+    'accounts',
 ]
 
 
@@ -82,14 +86,19 @@ WSGI_APPLICATION = 'frizzl.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'frizzl',
+    #     'USER': 'user',
+    #     'PASSWORD': 'user@pass135',
+    #     'HOST': 'localhost',
+    #     'PORT': '3306',
+    # },
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'frizzl',
-        'USER': 'admin',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'frizzl.db',
     }
+
 }
 
 
@@ -131,8 +140,18 @@ USE_TZ = True
 
 STATIC_ROOT = BASE_DIR / 'static'
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'frizzl/static'
+]
+
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+MESSAGE_TAGS = {
+    messages.SUCCESS: 'green',
+    messages.ERROR: 'red',
+}

@@ -3,6 +3,8 @@ x-app: &default-app
   build: '.'
   volumes:
     - .:/usr/src/app
+    - /tmp/frizzl/mysqld:/var/run/mysqld
+
   depends_on:
     - db
   restart: "unless-stopped"
@@ -10,7 +12,9 @@ x-app: &default-app
 services:
   web:
     << : *default-app
-    command: python3 manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
     
@@ -22,30 +26,50 @@ services:
       - "8383:8383"
 
   db:
-    image: postgres
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
 
-    volumes:
-      - ./data/db:/var/lib/postgresql/data:z
-
-    environment:
-      - POSTGRES_DB=frizzl
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=postgres
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@google.com
-      - PGADMIN_DEFAULT_PASSWORD=admin
-      - PGADMIN_LISTEN_PORT=5050
 
     volumes:
-      - ./data/pgadmin:/var/lib/pgadmin/
+      - ./data/db:/var/lib/mysql/
+      - /tmp/frizzl/mysqld:/var/run/mysqld
+      
+    environment:
+      MYSQL_DATABASE: 'frizzl'
+      MYSQL_USER: 'newuser'
+      MYSQL_PASSWORD: 'user123'
+      MYSQL_ROOT_PASSWORD: 'root123'
 
-    depends_on:
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin  
+    restart: always
+    ports:
+      - 8080:80
+
+    environment:
+      - PMA_ARBITRARY=1
+
+    depends_on: 
       - db
 
-    ports:
-      - "5050:5050"
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin
+  #   restart: always
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=admin@google.com
+  #     - PGADMIN_DEFAULT_PASSWORD=admin
+  #     - PGADMIN_LISTEN_PORT=5050
+
+  #   volumes:
+  #     - ./data/pgadmin:/var/lib/pgadmin/
+
+  #   depends_on:
+  #     - db
+
+  #   ports:
+  #     - "5050:5050"

@@ -1,0 +1,15 @@
+<button id="user-profile-info" data-dropdown-toggle="post-dropdown">
+    <ion-icon name="ellipsis-horizontal-outline" size="large"></ion-icon>
+</button>
+<div id="post-dropdown" class="hidden z-10 w-44 text-base list-none bg-white rounded divide-y divide-gray-100">
+    <ul class="py-1" aria-labelledby="user-profile-info">
+      <li>
+        <a href="{% url 'pages:index' %}" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Go Back</a>
+      </li>
+      {% if post.user.user.id == request.user.id %}
+        <li>
+          <a href="{% url 'posts:delete' post.id %}" class="block py-2 px-4 text-sm text-red-500 hover:bg-gray-100">Delete Post</a>
+        </li>
+      {% endif %}
+    </ul>
+</div>

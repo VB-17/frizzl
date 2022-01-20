@@ -1,0 +1,22 @@
+
+{% for post in posts %}
+<div class="max-w-lg bg-white border border-gray-200 shadow-sm h-full w-full">
+    <div class='flex items-center space-x-4 p-5'>
+        <img class="w-8 h-8 rounded-full object-cover" src="{{ post.user.photo.url }}" alt="user photo">
+        <a href="{{ post.user.profile_url }}">
+            <h3 class='font-bold'>{{ post.user.user.username }}</h3>
+        </a>
+    </div>
+    <a href="{% url 'posts:detail' post.id %}">
+        <img class='h-[566px] w-full object-cover' src="{{ post.img.url }}" alt="{{ post.caption }}" />
+    </a>
+    <div class="flex space-x-3 p-5">
+        <img src="{{ post.user.photo.url }}" alt={{ post.user.user.username }} class='h-5 w-5 rounded-full object-cover' />
+        <span>
+            <a href="{{ post.user.profile_url }}">
+                <b>{{ post.user.user.username }}</b>
+            </a> {{ post.caption }}
+        </span>
+    </div>
+</div>
+{% endfor %}

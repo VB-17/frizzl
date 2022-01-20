@@ -6,6 +6,8 @@
  */
 
 module.exports = {
+  mode: "jit",
+  darkMode: "false",
   content: [
     /**
      * HTML. Paths to Django template files that will contain Tailwind CSS classes.
@@ -19,6 +21,7 @@ module.exports = {
      * Adjust the following line to match your project structure.
      */
     "../../templates/**/*.html",
+    "./node_modules/@themesberg/flowbite/**/*.js",
 
     /*
      * Templates in other django apps (BASE_DIR/<any_app_name>/templates).
@@ -42,7 +45,11 @@ module.exports = {
     // '../../**/*.py'
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["Josefin Sans", "sans-serif"],
+      },
+    },
   },
   plugins: [
     /**
@@ -50,7 +57,7 @@ module.exports = {
      * for forms. If you don't like it or have own styling for forms,
      * comment the line below to disable '@tailwindcss/forms'.
      */
-    require("@tailwindcss/forms"),
+    // require("@tailwindcss/forms"),
     require("@tailwindcss/typography"),
     require("@tailwindcss/line-clamp"),
     require("@tailwindcss/aspect-ratio"),

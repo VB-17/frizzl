@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ user.username }}{% endblock title %}
+
+{% block content %}
+
+<div class='mx-auto max-w-5xl grid grid-cols-2 shadow-sm border border-gray-200'>
+    <div class='h-full w-full'>
+        <img class="h-[600px] w-full object-cover" src="{{ post.img.url }}" alt="{{ post.caption }}" />
+    </div>
+    <div class='flex flex-col bg-neutral-50 w-full'>
+        <div class='flex items-center space-x-3 p-4'>
+            <img class='h-8 w-8 rounded-full object-cover' src="{{ user_profile.photo.url }}"
+                alt="{{ user_profile.user.username }}" />
+            <a class='flex-1' href="{{ user_profile.profile_url }}">
+                <h3>
+                    <b>{{ user_profile.user.username }}</b> {{ post.caption }}
+                </h3>
+            </a>
+            {% include 'partials/_post-dropdown.html' with post=post %}
+        </div>
+        <div class='flex-1 border-y-2 p-4 border-slate-100'>
+            {% if comments %}
+            {% for comment in comments %}
+                {% include 'partials/_comment.html' with comment=comment.0 is_liked=comment.1 %}
+            {% endfor %}
+            {% endif %}
+        </div>
+        <div class='p-4'>
+            <form class='flex -ml-2 space-x-3 items-center mb-3' method="POST" action="{% url 'posts:like' %}">
+                {% csrf_token %}
+                <button type='submit' name='post_id' value="{{ post.id }}">
+                    {% if post_is_liked %}
+                    <ion-icon class='text-red-600' name="heart" size="large"></ion-icon>
+                    {% else %}
+                    <ion-icon name="heart-outline" size="large"></ion-icon>
+                    {% endif %}
+                </button>
+
+                <span class='-mt-1 font-base'>{{ post.total_likes }} Likes</span>
+            </form>
+
+            <form method="POST" class='relative'>
+                {% csrf_token %}
+                <input class='hidden comment-box'>
+                {{ form.comment }}
+                <button type="submit"
+                    class='absolute text-white bg-blue-500 top-0 right-0 h-14 px-4 rounded-tr-lg rounded-br-lg '>
+                    Comment
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% comment %} <h4>{{ post.likes }}</h4> {% endcomment %}
+
+
+{% endblock content %}
