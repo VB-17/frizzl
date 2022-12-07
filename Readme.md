@@ -1,4 +1,4 @@
-## To run this application
+## To run this application ( Note: This readme is yet to be updated )
 - Create a directory data and subdirectories named db and pgadmin 
     `mkdir -p data/{db,pgadmin}`
 
